@@ -36,7 +36,7 @@ def _pip_import_impl(repository_ctx):
         repository_ctx.path("requirements.bzl"),
         "--directory",
         repository_ctx.path(""),
-    ])
+    ], timeout=repository_ctx.attr.timeout)
 
     if result.return_code:
         fail("pip_import failed: %s (%s)" % (result.stdout, result.stderr))
@@ -51,6 +51,10 @@ wheels.
             mandatory = True,
             allow_single_file = True,
             doc = "The label of the requirements.txt file.",
+        ),
+        "timeout": attr.int(
+            default = 600,
+            doc = "Timeout (in seconds) for repository fetch."
         ),
         "_script": attr.label(
             executable = True,
